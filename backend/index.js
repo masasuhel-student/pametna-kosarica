@@ -18,3 +18,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Strežnik teče na portu ${PORT}`);
 });
+
+app.use('/api/listki', require('./routes/listki'));

@@ -21,6 +21,8 @@ db.serialize(() => {
     ime TEXT NOT NULL,
     status TEXT DEFAULT 'aktiven',
     skupna_cena REAL,
+    max_trgovine INTEGER DEFAULT 2,
+    max_km INTEGER DEFAULT 5,
     ustvarjen DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (uporabnik_id) REFERENCES uporabniki(id)
   )`);
