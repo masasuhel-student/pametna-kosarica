@@ -20,3 +20,4 @@ app.listen(PORT, () => {
 });
 
 app.use('/api/listki', require('./routes/listki'));
+app.use('/api/letaki', require('./routes/letaki'));
