@@ -86,4 +86,25 @@ router.delete('/:id', preveriToken, (req, res) => {
   );
 });
 
+// Uredi listek
+router.put('/:id', preveriToken, (req, res) => {
+  const { izdelki } = req.body;
+
+  db.run(
+    'DELETE FROM izdelki WHERE listek_id = ?',
+    [req.params.id],
+    (err) => {
+      if (err) return res.status(500).json({ napaka: err.message });
+
+      if (izdelki && izdelki.length) {
+        const stmt = db.prepare('INSERT INTO izdelki (listek_id, ime) VALUES (?, ?)');
+        izdelki.forEach(ime => stmt.run(req.params.id, ime));
+        stmt.finalize();
+      }
+
+      res.json({ sporocilo: 'Listek posodobljen!' });
+    }
+  );
+});
+
 module.exports = router;
