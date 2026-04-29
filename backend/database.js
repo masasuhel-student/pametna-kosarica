@@ -24,9 +24,10 @@ db.serialize(() => {
   skupni_prihranek REAL DEFAULT 0,
   max_trgovine INTEGER DEFAULT 2,
   max_km INTEGER DEFAULT 5,
+  potece DATETIME,
   ustvarjen DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (uporabnik_id) REFERENCES uporabniki(id)
-  )`);
+)`);
 
   db.run(`CREATE TABLE IF NOT EXISTS izdelki (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

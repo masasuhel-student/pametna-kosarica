@@ -29,8 +29,23 @@ export default function LoginScreen({ navigation }) {
       <Text style={s.logo}>🛒</Text>
       <Text style={s.title}>Pametna košarica</Text>
       <Text style={s.subtitle}>Varčuj pri vsakem nakupu</Text>
-      <TextInput style={s.input} placeholder="E-pošta" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={s.input} placeholder="Geslo" value={geslo} onChangeText={setGeslo} secureTextEntry />
+      <TextInput 
+        style={s.input} 
+        placeholder="E-pošta" 
+        value={email} 
+        onChangeText={setEmail} 
+        keyboardType="email-address" 
+        autoCapitalize="none"
+        placeholderTextColor="#999"
+      />
+      <TextInput 
+        style={s.input} 
+        placeholder="Geslo" 
+        value={geslo} 
+        onChangeText={setGeslo} 
+        secureTextEntry
+        placeholderTextColor="#999"
+      />
       <TouchableOpacity style={s.btn} onPress={prijava}>
         <Text style={s.btnText}>{loading ? 'Prijavljam...' : 'Prijava'}</Text>
       </TouchableOpacity>

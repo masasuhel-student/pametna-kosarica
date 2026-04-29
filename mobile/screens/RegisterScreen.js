@@ -28,10 +28,10 @@ export default function RegisterScreen({ navigation }) {
     <View style={s.container}>
       <Text style={s.logo}>🛒</Text>
       <Text style={s.title}>Registracija</Text>
-      <TextInput style={s.input} placeholder="Ime in priimek" value={ime} onChangeText={setIme} />
-      <TextInput style={s.input} placeholder="E-pošta" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-      <TextInput style={s.input} placeholder="Geslo" value={geslo} onChangeText={setGeslo} secureTextEntry />
-      <TextInput style={s.input} placeholder="Kraj (npr. Celje)" value={kraj} onChangeText={setKraj} />
+      <TextInput style={s.input} placeholder="Ime in priimek" value={ime} onChangeText={setIme} placeholderTextColor="#999" />
+      <TextInput style={s.input} placeholder="E-pošta" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholderTextColor="#999" />
+      <TextInput style={s.input} placeholder="Geslo" value={geslo} onChangeText={setGeslo} secureTextEntry placeholderTextColor="#999" />
+      <TextInput style={s.input} placeholder="Kraj (npr. Celje)" value={kraj} onChangeText={setKraj} placeholderTextColor="#999" />
       <TouchableOpacity style={s.btn} onPress={registracija}>
         <Text style={s.btnText}>{loading ? 'Registriram...' : 'Ustvari račun'}</Text>
       </TouchableOpacity>

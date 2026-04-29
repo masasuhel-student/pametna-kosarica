@@ -19,5 +19,11 @@ app.listen(PORT, () => {
   console.log(`Strežnik teče na portu ${PORT}`);
 });
 
+// Pocisti osnutke vsake 24 ur
+setInterval(async () => {
+  db.run('DELETE FROM listki WHERE status = ? AND potece < ?', 
+    ['osnutek', new Date().toISOString()]);
+}, 24 * 60 * 60 * 1000);
+
 app.use('/api/listki', require('./routes/listki'));
 app.use('/api/letaki', require('./routes/letaki'));

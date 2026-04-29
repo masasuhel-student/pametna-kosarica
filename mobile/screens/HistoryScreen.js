@@ -9,8 +9,11 @@ export default function HistoryScreen({ navigation }) {
   const [listki, setListki] = useState([]);
 
   useEffect(() => {
-    naloziListke();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      naloziListke();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   async function naloziListke() {
     try {
@@ -31,21 +34,25 @@ export default function HistoryScreen({ navigation }) {
           <Text style={s.emptyText}>Še nimaš shranjenih listkov</Text>
         </View>
       ) : (
-       listki.map(l => (
-        <TouchableOpacity key={l.id} style={s.card} onPress={() => navigation.navigate('Listek', { listek_id: l.id })}>
+        listki.map(l => (
+          <TouchableOpacity key={l.id} style={s.card} onPress={() => navigation.navigate('Listek', { listek_id: l.id })}>
             <View style={{ flex: 1 }}>
-            <Text style={s.cardTitle}>{l.ime}</Text>
-            <Text style={s.cardMeta}>{l.ustvarjen?.split('T')[0] || l.ustvarjen} · maks. {l.max_trgovine} trgovin</Text>
-            {l.skupni_prihranek > 0 && (
-                <Text style={s.cardPrihranek}>Prihranjeno: {l.skupni_prihranek?.toFixed(2)}€</Text>
-            )}
+              <Text style={s.cardTitle}>{l.ime}</Text>
+              <Text style={s.cardMeta}>{l.ustvarjen?.split('T')[0] || l.ustvarjen} · maks. {l.max_trgovine} trgovin</Text>
             </View>
-            {l.skupna_cena ? (
-            <Text style={s.cardPrice}>{l.skupna_cena.toFixed(2)}€</Text>
+            {l.status === 'osnutek' ? (
+              <Text style={s.cardOsnutek}>osnutek</Text>
+            ) : l.skupni_prihranek > 0 ? (
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={s.cardPrihranek}>+{l.skupni_prihranek.toFixed(2)}€</Text>
+                <Text style={s.cardPrice}>{l.skupna_cena.toFixed(2)}€</Text>
+              </View>
+            ) : l.skupna_cena ? (
+              <Text style={s.cardPrice}>{l.skupna_cena.toFixed(2)}€</Text>
             ) : (
-            <Text style={s.cardPending}>—</Text>
+              <Text style={s.cardOsnutek}>osnutek</Text>
             )}
-        </TouchableOpacity>
+          </TouchableOpacity>
         ))
       )}
       <TouchableOpacity style={s.btn} onPress={() => navigation.navigate('NewList')}>
@@ -61,9 +68,9 @@ const s = StyleSheet.create({
   card: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   cardTitle: { fontSize: 15, fontWeight: '500' },
   cardMeta: { fontSize: 12, color: '#888', marginTop: 2 },
-  cardPrihranek: { fontSize: 12, color: '#1D9E75', marginTop: 4, fontWeight: '500' },
-  cardPrice: { fontSize: 16, fontWeight: '600', color: '#1D9E75' },
-  cardPending: { fontSize: 16, color: '#ccc' },
+  cardPrihranek: { fontSize: 13, fontWeight: '600', color: '#1D9E75', textAlign: 'right' },
+  cardPrice: { fontSize: 11, color: '#aaa', textAlign: 'right', marginTop: 2 },
+  cardOsnutek: { fontSize: 12, color: '#aaa', fontStyle: 'italic' },
   empty: { alignItems: 'center', padding: 60 },
   emptyIcon: { fontSize: 40, marginBottom: 8 },
   emptyText: { color: '#888', fontSize: 14 },

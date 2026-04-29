@@ -37,6 +37,8 @@ export default function HomeScreen({ navigation }) {
     .filter(l => l.skupna_cena)
     .reduce((sum, l) => sum + (l.skupni_prihranek || 0), 0);
 
+  const nedavniListki = listki.slice(0, 5);
+
   return (
     <ScrollView style={s.container}>
       <View style={s.header}>
@@ -51,7 +53,7 @@ export default function HomeScreen({ navigation }) {
 
       <View style={s.statsRow}>
         <View style={s.stat}>
-          <Text style={s.statVal}>{listki.length}</Text>
+          <Text style={s.statVal}>{listki.filter(l => l.status !== 'osnutek').length}</Text>
           <Text style={s.statLabel}>Listki</Text>
         </View>
         <View style={s.stat}>
@@ -70,20 +72,39 @@ export default function HomeScreen({ navigation }) {
         <Text style={s.newBtnText}>+ Nov nakupovalni listek</Text>
       </TouchableOpacity>
 
-      <Text style={s.sectionTitle}>Zadnji listki</Text>
+      <View style={s.sectionHeader}>
+        <Text style={s.sectionTitle}>Nedavni listki</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('History')}>
+          <Text style={s.sectionLink}>Vsi listki →</Text>
+        </TouchableOpacity>
+      </View>
+
       {listki.length === 0 ? (
         <View style={s.empty}>
           <Text style={s.emptyIcon}>🛍️</Text>
           <Text style={s.emptyText}>Še nimaš listkov</Text>
         </View>
       ) : (
-        listki.slice(0, 5).map(l => (
-          <TouchableOpacity key={l.id} style={s.card} onPress={() => navigation.navigate('History')}>
-            <View>
+        nedavniListki.map(l => (
+          <TouchableOpacity 
+            key={l.id} 
+            style={s.card} 
+            onPress={() => navigation.navigate('Listek', { listek_id: l.id })}
+          >
+            <View style={{ flex: 1 }}>
               <Text style={s.cardTitle}>{l.ime}</Text>
               <Text style={s.cardMeta}>{l.ustvarjen?.split('T')[0] || l.ustvarjen}</Text>
             </View>
-            {l.skupna_cena ? <Text style={s.cardPrice}>{l.skupna_cena.toFixed(2)}€</Text> : null}
+            {l.status === 'osnutek' ? (
+              <Text style={s.cardOsnutek}>osnutek</Text>
+            ) : l.skupni_prihranek > 0 ? (
+              <View style={{ alignItems: 'flex-end' }}>
+                <Text style={s.cardPrihranek}>+{l.skupni_prihranek.toFixed(2)}€</Text>
+                <Text style={s.cardPrice}>{l.skupna_cena.toFixed(2)}€</Text>
+              </View>
+            ) : l.skupna_cena ? (
+              <Text style={s.cardPrice}>{l.skupna_cena.toFixed(2)}€</Text>
+            ) : null}
           </TouchableOpacity>
         ))
       )}
@@ -103,11 +124,15 @@ const s = StyleSheet.create({
   statLabel: { fontSize: 11, color: '#888', marginTop: 2 },
   newBtn: { backgroundColor: '#1D9E75', borderRadius: 12, padding: 16, margin: 16, marginTop: 4, alignItems: 'center' },
   newBtnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  sectionTitle: { fontSize: 13, fontWeight: '600', color: '#888', marginHorizontal: 16, marginBottom: 8, textTransform: 'uppercase', letterSpacing: 0.5 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 16, marginBottom: 8 },
+  sectionTitle: { fontSize: 13, fontWeight: '600', color: '#888', textTransform: 'uppercase', letterSpacing: 0.5 },
+  sectionLink: { fontSize: 13, color: '#1D9E75' },
   card: { backgroundColor: '#fff', borderRadius: 12, padding: 16, marginHorizontal: 16, marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   cardTitle: { fontSize: 15, fontWeight: '500' },
   cardMeta: { fontSize: 12, color: '#888', marginTop: 2 },
-  cardPrice: { fontSize: 16, fontWeight: '600', color: '#1D9E75' },
+  cardPrihranek: { fontSize: 13, fontWeight: '600', color: '#1D9E75', textAlign: 'right' },
+  cardPrice: { fontSize: 11, color: '#aaa', textAlign: 'right', marginTop: 2 },
+  cardOsnutek: { fontSize: 12, color: '#aaa', fontStyle: 'italic' },
   empty: { alignItems: 'center', padding: 40 },
   emptyIcon: { fontSize: 40, marginBottom: 8 },
   emptyText: { color: '#888', fontSize: 14 }

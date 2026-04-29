@@ -1,5 +1,8 @@
+import { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, ActivityIndicator } from 'react-native';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -11,9 +14,23 @@ import ListekScreen from './screens/ListekScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [prijavljen, setPrijavljen] = useState(null);
+
+  useEffect(() => {
+    async function preveriPrijavo() {
+      const token = await AsyncStorage.getItem('token');
+      setPrijavljen(!!token);
+    }
+    preveriPrijavo();
+  }, []);
+
+  if (prijavljen === null) {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><ActivityIndicator size="large" color="#1D9E75" /></View>;
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={prijavljen ? 'Home' : 'Login'} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />

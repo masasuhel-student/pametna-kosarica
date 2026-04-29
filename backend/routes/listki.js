@@ -18,13 +18,13 @@ function preveriToken(req, res, next) {
 
 // Ustvari nov listek
 router.post('/', preveriToken, (req, res) => {
-  const { ime, izdelki, max_trgovine, max_km } = req.body;
+  const { ime, izdelki, max_trgovine, max_km, status, potece } = req.body;
   
   if (!ime) return res.status(400).json({ napaka: 'Ime listka je obvezno' });
 
   db.run(
-    'INSERT INTO listki (uporabnik_id, ime, max_trgovine, max_km) VALUES (?, ?, ?, ?)',
-    [req.uporabnik.id, ime, max_trgovine || 2, max_km || 5],
+    'INSERT INTO listki (uporabnik_id, ime, max_trgovine, max_km, status, potece) VALUES (?, ?, ?, ?, ?, ?)',
+    [req.uporabnik.id, ime, max_trgovine || 2, max_km || 5, status || 'aktiven', potece || null],
     function(err) {
       if (err) return res.status(500).json({ napaka: err.message });
       
@@ -88,21 +88,40 @@ router.delete('/:id', preveriToken, (req, res) => {
 
 // Uredi listek
 router.put('/:id', preveriToken, (req, res) => {
-  const { izdelki } = req.body;
+  const { izdelki, ime } = req.body;
+
+  // Status je aktiven samo če ima izdelke, sicer ostane osnutek
+  const novStatus = (izdelki && izdelki.length > 0) ? 'aktiven' : 'osnutek';
 
   db.run(
-    'DELETE FROM izdelki WHERE listek_id = ?',
-    [req.params.id],
+    'UPDATE listki SET status = ?, ime = ? WHERE id = ?',
+    [novStatus, ime || 'Listek', req.params.id],
     (err) => {
       if (err) return res.status(500).json({ napaka: err.message });
 
-      if (izdelki && izdelki.length) {
-        const stmt = db.prepare('INSERT INTO izdelki (listek_id, ime) VALUES (?, ?)');
-        izdelki.forEach(ime => stmt.run(req.params.id, ime));
-        stmt.finalize();
-      }
+      db.run('DELETE FROM izdelki WHERE listek_id = ?', [req.params.id], (err) => {
+        if (err) return res.status(500).json({ napaka: err.message });
 
-      res.json({ sporocilo: 'Listek posodobljen!' });
+        if (izdelki && izdelki.length) {
+          const stmt = db.prepare('INSERT INTO izdelki (listek_id, ime) VALUES (?, ?)');
+          izdelki.forEach(i => stmt.run(req.params.id, i));
+          stmt.finalize();
+        }
+
+        res.json({ sporocilo: 'Listek posodobljen!', status: novStatus });
+      });
+    }
+  );
+});
+
+// Zbriši potekle osnutke
+router.delete('/osnutki/pocisti', async (req, res) => {
+  db.run(
+    'DELETE FROM listki WHERE status = ? AND potece < ?',
+    ['osnutek', new Date().toISOString()],
+    (err) => {
+      if (err) return res.status(500).json({ napaka: err.message });
+      res.json({ sporocilo: 'Osnutki počiščeni' });
     }
   );
 });
