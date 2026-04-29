@@ -34,7 +34,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-speech-recognition"
+      "expo-speech-recognition",
+      "expo-web-browser"
     ],
     "extra": {
       "eas": {

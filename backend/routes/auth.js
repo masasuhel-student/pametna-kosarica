@@ -6,9 +6,9 @@ const db = require('../database');
 
 // Registracija
 router.post('/registracija', (req, res) => {
-  const { ime, email, geslo, kraj } = req.body;
+  const { uporabnisko_ime, email, geslo, kraj } = req.body;
   
-  if (!ime || !email || !geslo) {
+  if (!uporabnisko_ime || !email || !geslo) {
     return res.status(400).json({ napaka: 'Vsa polja so obvezna' });
   }
 
@@ -16,23 +16,29 @@ router.post('/registracija', (req, res) => {
   
   db.run(
     'INSERT INTO uporabniki (ime, email, geslo, kraj) VALUES (?, ?, ?, ?)',
-    [ime, email, hash, kraj],
+    [uporabnisko_ime, email, hash, kraj],
     function(err) {
-      if (err) return res.status(400).json({ napaka: 'Email že obstaja' });
+      if (err) return res.status(400).json({ napaka: 'Email ali uporabniško ime že obstaja' });
       res.json({ sporocilo: 'Registracija uspešna!', id: this.lastID });
     }
   );
 });
 
-// Prijava
+// Prijava z emailom ali uporabniškim imenom
 router.post('/prijava', (req, res) => {
   const { email, geslo } = req.body;
 
-  db.get('SELECT * FROM uporabniki WHERE email = ?', [email], (err, uporabnik) => {
-    if (err || !uporabnik) return res.status(400).json({ napaka: 'Napačen email ali geslo' });
+  // Preveri ali je email ali uporabniško ime
+  const jeEmail = email.includes('@');
+  const query = jeEmail 
+    ? 'SELECT * FROM uporabniki WHERE email = ?'
+    : 'SELECT * FROM uporabniki WHERE ime = ?';
+
+  db.get(query, [email], (err, uporabnik) => {
+    if (err || !uporabnik) return res.status(400).json({ napaka: 'Napačni podatki' });
     
     const veljavno = bcrypt.compareSync(geslo, uporabnik.geslo);
-    if (!veljavno) return res.status(400).json({ napaka: 'Napačen email ali geslo' });
+    if (!veljavno) return res.status(400).json({ napaka: 'Napačni podatki' });
 
     const token = jwt.sign(
       { id: uporabnik.id, email: uporabnik.email },
