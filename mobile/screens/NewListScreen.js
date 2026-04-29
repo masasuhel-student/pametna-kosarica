@@ -5,13 +5,22 @@ import axios from 'axios';
 
 const API = 'http://192.168.50.153:3000/api';
 
-export default function NewListScreen({ navigation }) {
+export default function NewListScreen({ navigation }) { 
   const [ime, setIme] = useState('');
   const [izdelek, setIzdelek] = useState('');
   const [izdelki, setIzdelki] = useState([]);
   const [maxTrgovine, setMaxTrgovine] = useState(2);
   const [maxKm, setMaxKm] = useState(5);
   const [loading, setLoading] = useState(false);
+  const [poslusam, setPoslusam] = useState(false);
+
+  async function toggleGlas() {
+    Alert.alert(
+      '🎤 Glasovno vnašanje',
+      'Glasovno vnašanje bo na voljo v naslednji verziji aplikacije. Uporabite tipkovnico.',
+      [{ text: 'OK' }]
+    );
+  }
 
   function dodajIzdelek() {
     if (!izdelek.trim()) return;
@@ -65,6 +74,10 @@ export default function NewListScreen({ navigation }) {
           <Text style={s.addBtnText}>+</Text>
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity style={[s.glasBtn, poslusam && s.glasBtnAktiven]} onPress={toggleGlas}>
+        <Text style={s.glasBtnText}>🎤 Govori izdelke</Text>
+      </TouchableOpacity>
 
       <View style={s.itemsList}>
         {izdelki.map((i, idx) => (
@@ -129,5 +142,8 @@ const s = StyleSheet.create({
   btn: { backgroundColor: '#1D9E75', borderRadius: 12, padding: 16, alignItems: 'center', marginTop: 24 },
   btnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
   backBtn: { alignItems: 'center', padding: 16 },
-  backText: { color: '#888', fontSize: 14 }
+  backText: { color: '#888', fontSize: 14 },
+  glasBtn: { borderWidth: 0.5, borderColor: '#1D9E75', borderRadius: 12, padding: 14, alignItems: 'center', marginBottom: 12 },
+  glasBtnAktiven: { backgroundColor: '#E1F5EE', borderColor: '#E24B4A' },
+  glasBtnText: { color: '#1D9E75', fontSize: 14, fontWeight: '500' }
 });
