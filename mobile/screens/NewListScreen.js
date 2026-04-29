@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
 
 const API = 'http://192.168.50.153:3000/api';
 
@@ -14,12 +15,30 @@ export default function NewListScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [poslusam, setPoslusam] = useState(false);
 
+  useSpeechRecognitionEvent('result', (event) => {
+    const besedilo = event.results[0]?.transcript || '';
+    if (besedilo) {
+      const novi = besedilo
+        .split(/,|\bin\b|\bter\b|\bpa\b|\bnin\b/i)
+        .map(i => i.trim())
+        .filter(Boolean);
+      setIzdelki(prev => [...prev, ...novi]);
+    }
+    setPoslusam(false);
+  });
+
+  useSpeechRecognitionEvent('end', () => setPoslusam(false));
+
   async function toggleGlas() {
-    Alert.alert(
-      '🎤 Glasovno vnašanje',
-      'Glasovno vnašanje bo na voljo v naslednji verziji aplikacije. Uporabite tipkovnico.',
-      [{ text: 'OK' }]
-    );
+    if (poslusam) {
+      ExpoSpeechRecognitionModule.stop();
+      setPoslusam(false);
+    } else {
+      const { granted } = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+      if (!granted) return Alert.alert('Napaka', 'Ni dovoljenja za mikrofon');
+      ExpoSpeechRecognitionModule.start({ lang: 'sl-SI', interimResults: false });
+      setPoslusam(true);
+    }
   }
 
   function dodajIzdelek() {
@@ -76,7 +95,9 @@ export default function NewListScreen({ navigation }) {
       </View>
 
       <TouchableOpacity style={[s.glasBtn, poslusam && s.glasBtnAktiven]} onPress={toggleGlas}>
-        <Text style={s.glasBtnText}>🎤 Govori izdelke</Text>
+        <Text style={s.glasBtnText}>
+          {poslusam ? '🔴 Poslušam... (tapni za stop)' : '🎤 Govori izdelke'}
+        </Text>
       </TouchableOpacity>
 
       <View style={s.itemsList}>
