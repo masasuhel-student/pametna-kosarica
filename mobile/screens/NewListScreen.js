@@ -461,7 +461,7 @@ const s = StyleSheet.create({
   checkbox: { width: 22, height: 22, borderRadius: 6, borderWidth: 1.5, borderColor: '#ccc', justifyContent: 'center', alignItems: 'center' },
   checkboxActive: { backgroundColor: '#4faf5a', borderColor: '#4faf5a' },
   map: { height: 220, borderRadius: 14, marginTop: 8, overflow: 'hidden' },
-  mapPlaceholder: { height: 120, backgroundColor: '#fff', borderRadius: 14, justifyContent: 'center', alignItems: 'center', gap: 8 },
+  mapPlaceholder: { backgroundColor: '#fff', borderRadius: 14, padding: 24, alignItems: 'center', gap: 6 },
   mapPlaceholderText: { fontSize: 13, color: '#aaa' },
   markerBox: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
   markerText: { fontSize: 11, fontWeight: '700' },

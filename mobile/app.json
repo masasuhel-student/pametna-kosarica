@@ -26,8 +26,15 @@
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
       ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCzlMGX0o_XaBALMrbuG26apCAM-Fyn6sY"
+        }
+      },
       "package": "com.masasuhelstudent.mobile"
     },
     "web": {
@@ -35,7 +42,13 @@
     },
     "plugins": [
       "expo-speech-recognition",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "react-native-maps",
+        {
+          "googleMapsApiKey": "AIzaSyCzlMGX0o_XaBALMrbuG26apCAM-Fyn6sY"
+        }
+      ]
     ],
     "extra": {
       "eas": {
