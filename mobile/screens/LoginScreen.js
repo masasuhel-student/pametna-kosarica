@@ -4,7 +4,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 
-const API = 'http://192.168.50.153:3000/api';
+const API = 'http://192.168.64.106:3000/api';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');

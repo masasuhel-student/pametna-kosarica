@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvo
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 
-const API = 'http://192.168.50.153:3000/api';
+const API = 'http://192.168.64.106:3000/api';
 
 export default function RegisterScreen({ navigation }) {
   const [uporabniskoIme, setUporabniskoIme] = useState('');

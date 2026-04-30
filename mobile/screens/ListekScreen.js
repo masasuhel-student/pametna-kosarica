@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
 
-const API = 'http://192.168.50.153:3000/api';
+const API = 'http://192.168.64.106:3000/api';
 const ODSTRANI_BESEDE = /\b(dodaj|kupim|kupi|potrebujem|hočem|hocem|želim|zelim|prosim|še|se|in|ter|pa|nin)\b/gi;
 
 export default function ListekScreen({ route, navigation }) {
