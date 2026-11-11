@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, TextInput } from 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
+import BottomNav from '../components/BottomNav';
 
 const API = 'http://192.168.64.106:3000/api';
 
@@ -108,28 +109,7 @@ export default function HistoryScreen({ navigation }) {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Bottom nav */}
-      <View style={s.bottomNav}>
-        <TouchableOpacity style={s.navItem} onPress={() => navigation.navigate('Home')}>
-          <Ionicons name="home-outline" size={22} color="#888" />
-          <Text style={s.navLabel}>Domov</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navItem}>
-          <Ionicons name="document-text" size={22} color="#4faf5a" />
-          <Text style={[s.navLabel, { color: '#4faf5a' }]}>Vsi listki</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navCenter} onPress={() => navigation.navigate('NewList')}>
-          <Ionicons name="add" size={32} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navItem} onPress={() => navigation.navigate('History')}>
-          <Ionicons name="create-outline" size={22} color="#888" />
-          <Text style={s.navLabel}>Uredi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navItem}>
-          <Ionicons name="person-outline" size={22} color="#888" />
-          <Text style={s.navLabel}>Profil</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNav navigation={navigation} aktivni="listki" />
     </View>
   );
 }
@@ -155,8 +135,4 @@ const s = StyleSheet.create({
   emptyText: { color: '#888', fontSize: 14 },
   newBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, margin: 16, padding: 14, borderRadius: 12, borderWidth: 1.5, borderColor: '#4faf5a', borderStyle: 'dashed' },
   newBtnText: { color: '#4faf5a', fontSize: 14, fontWeight: '600' },
-  bottomNav: { position: 'absolute', bottom: 34, left: 0, right: 0, backgroundColor: '#fff', flexDirection: 'row', paddingBottom: 12, paddingTop: 10, borderTopWidth: 0.5, borderTopColor: '#eee', alignItems: 'center' },
-  navItem: { flex: 1, alignItems: 'center', gap: 2 },
-  navLabel: { fontSize: 10, color: '#888' },
-  navCenter: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#4faf5a', justifyContent: 'center', alignItems: 'center', marginBottom: 16, elevation: 8 },
 });

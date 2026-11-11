@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvo
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
+import BottomNav from '../components/BottomNav';
 
 const API = 'http://192.168.64.106:3000/api';
 

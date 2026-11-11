@@ -42,13 +42,7 @@
     },
     "plugins": [
       "expo-speech-recognition",
-      "expo-web-browser",
-      [
-        "react-native-maps",
-        {
-          "googleMapsApiKey": "AIzaSyCzlMGX0o_XaBALMrbuG26apCAM-Fyn6sY"
-        }
-      ]
+      "expo-web-browser"
     ],
     "extra": {
       "eas": {

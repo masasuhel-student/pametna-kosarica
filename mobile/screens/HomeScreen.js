@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import BottomNav from '../components/BottomNav';
 
-const API = 'http://192.168.64.106:3000/api';
+const API = 'http://192.168.50.153:3000/api';
 
 export default function HomeScreen({ navigation }) {
   const [ime, setIme] = useState('');
@@ -58,7 +59,7 @@ export default function HomeScreen({ navigation }) {
           <Text style={s.logoIcon}>🛒</Text>
           <Text style={s.logoText}>Pametna<Text style={s.logoGreen}>Košarica</Text></Text>
         </View>
-        <TouchableOpacity style={s.avatarBtn} onPress={odjava}>
+        <TouchableOpacity onPress={odjava}>
           <View style={s.avatar}>
             <Text style={s.avatarText}>{ime.charAt(0).toUpperCase()}</Text>
           </View>
@@ -142,27 +143,7 @@ export default function HomeScreen({ navigation }) {
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      <View style={s.bottomNav}>
-        <TouchableOpacity style={s.navItem}>
-          <Ionicons name="home" size={22} color="#4faf5a" />
-          <Text style={[s.navLabel, { color: '#4faf5a' }]}>Domov</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navItem} onPress={() => navigation.navigate('History')}>
-          <Ionicons name="document-text-outline" size={22} color="#888" />
-          <Text style={s.navLabel}>Listki</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navCenter} onPress={() => navigation.navigate('NewList')}>
-          <Ionicons name="add" size={32} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navItem} onPress={() => navigation.navigate('History')}>
-          <Ionicons name="create-outline" size={22} color="#888" />
-          <Text style={s.navLabel}>Uredi</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={s.navItem} onPress={odjava}>
-          <Ionicons name="person-outline" size={22} color="#888" />
-          <Text style={s.navLabel}>Profil</Text>
-        </TouchableOpacity>
-      </View>
+      <BottomNav navigation={navigation} aktivni="home" />
     </View>
   );
 }
@@ -199,8 +180,4 @@ const s = StyleSheet.create({
   cardOsnutek: { fontSize: 11, color: '#aaa', fontStyle: 'italic' },
   empty: { alignItems: 'center', padding: 40, gap: 12 },
   emptyText: { color: '#888', fontSize: 14 },
-  bottomNav: { position: 'absolute', bottom: 34, left: 0, right: 0, backgroundColor: '#fff', flexDirection: 'row', paddingBottom: 12, paddingTop: 10, borderTopWidth: 0.5, borderTopColor: '#eee', alignItems: 'center' },
-  navItem: { flex: 1, alignItems: 'center', gap: 2 },
-  navLabel: { fontSize: 10, color: '#888' },
-  navCenter: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#4faf5a', justifyContent: 'center', alignItems: 'center', marginBottom: 16, elevation: 8 },
 });

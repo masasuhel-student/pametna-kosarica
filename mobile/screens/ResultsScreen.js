@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import BottomNav from '../components/BottomNav';
 
 export default function ResultsScreen({ route, navigation }) {
   const { rezultat } = route.params;
@@ -8,7 +9,8 @@ export default function ResultsScreen({ route, navigation }) {
   const besedilo = { hofer: '#854F0B', spar: '#3B6D11', lidl: '#185FA5' };
 
   return (
-    <ScrollView style={s.container}>
+    <View style={{ flex: 1 }}>
+    <ScrollView style={s.container} contentContainerStyle={{ paddingBottom: 100 }}>
       <Text style={s.title}>Rezultati 🎉</Text>
       <Text style={s.listek}>{rezultat?.listek}</Text>
 
@@ -52,6 +54,8 @@ export default function ResultsScreen({ route, navigation }) {
         <Text style={s.btnText}>Domov</Text>
       </TouchableOpacity>
     </ScrollView>
+    <BottomNav navigation={navigation} aktivni="" />
+    </View>
   );
 }
 

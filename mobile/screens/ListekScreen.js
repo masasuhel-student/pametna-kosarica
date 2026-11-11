@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Alert, TextInput 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { ExpoSpeechRecognitionModule, useSpeechRecognitionEvent } from 'expo-speech-recognition';
+import BottomNav from '../components/BottomNav';
 
 const API = 'http://192.168.64.106:3000/api';
 const ODSTRANI_BESEDE = /\b(dodaj|kupim|kupi|potrebujem|hočem|hocem|želim|zelim|prosim|še|se|in|ter|pa|nin)\b/gi;
@@ -161,6 +162,7 @@ export default function ListekScreen({ route, navigation }) {
   if (!listek) return <View style={s.container}><Text>Nalagam...</Text></View>;
 
   return (
+    <View style={{ flex: 1 }}>
     <ScrollView style={s.container} contentContainerStyle={{ paddingBottom: 100 }}>
       <View style={s.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -275,6 +277,8 @@ export default function ListekScreen({ route, navigation }) {
         </TouchableOpacity>
       )}
     </ScrollView>
+    <BottomNav navigation={navigation} aktivni="" />
+    </View>
   );
 }
 
